@@ -18,7 +18,7 @@ def minimumDistances(a):
     return min_distance
 
 
-a=[7,1,3,4,1,7]
+a=["Insert list here"]
 
 print(minimumDistances(a))
 
