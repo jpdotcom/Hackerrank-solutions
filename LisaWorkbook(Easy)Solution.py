@@ -22,7 +22,7 @@ def workbook(k, arr):
                     special_questions+=1
             else:
                 if j==len(b)-1:
-                    if (((j+1)*k)-(k-(arr[i]%k)))>=b[j] and  j*k+1<=b[j]:
+                    if (((j+1)*k)-(k-(arr[i]%k)))>=b[j] and j*k+1<=b[j]:
                         
                         
                         special_questions+=1
