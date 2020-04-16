@@ -15,13 +15,6 @@ def freqeuncy(n,k):
             freq[k/2]=1
    
     return freq
-    
-
-    
-    
-    
- 
-
 def max_frequency(x):
     max_freq=0
     max_freq_key=None
@@ -32,7 +25,6 @@ def max_frequency(x):
             if previous_max!=max_freq:
                 max_freq_key=frequencies
     return max_freq_key
-
 def nonDivisibleSubset(k, s):
     mark=None
     ans=0
