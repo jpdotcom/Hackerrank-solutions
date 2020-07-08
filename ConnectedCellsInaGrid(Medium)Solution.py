@@ -32,7 +32,7 @@ def calculate_region(matrix,pos):
 
         if j-1>=0 and i-1>=0 and (i-1,j-1) not in indices and matrix[i-1][j-1]==1:
             moves.put((i-1,j-1))
-            indices[(i-1,j-1)]
+            indices[(i-1,j-1)]=None
         
         if j+1<=m-1 and i+1<=n-1 and (i+1,j+1) not in indices and matrix[i+1][j+1]==1:
             moves.put((i+1,j+1))
