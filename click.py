@@ -13,4 +13,4 @@ def set_interval(func, sec):
 def clicky():
     pyautogui.click()
 
-set_interval(clicky, 0.5)
+set_interval(clicky, 0.01)

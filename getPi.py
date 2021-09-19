@@ -7,7 +7,7 @@ def getPi(n):
         x=random.uniform(0,1)
         y=random.uniform(0,1)
         
-        dist=math.sqrt(x**2+y**2)
+        dist=x**2+y**2
         
         if dist<=1:
             circle_points+=1

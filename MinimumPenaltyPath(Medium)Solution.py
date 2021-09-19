@@ -1,100 +1,111 @@
 import random
-import sys
-n=0
-sys.setrecursionlimit(10000)
-weights={}
-adj={}
-path=[]
-seen=set([])
-def generate_random():
-    res=[]
-    for i in range(1000):
-        for j in range(10):
-            edge=[i,j,random.randint(1,1000)]
-            res.append(edge)
-    return res
-penalty_paths=[float('inf')]
-def ORsum(path):
-    global n
-    n+=1
-    print(n)
-    res=path[0]
-    for i in range(1,len(path)):
-        res=(res|path[i])
-    return res
-
-def traverse_graph(node,start,end):
-    global n
-    
-    global seen
-    global path
-    global penalty_paths
-    if node not in adj:
-        return
-    
-    if node==end:
-        
-        penalty_paths.append(ORsum(path))
-        path.pop()
-        
-        return 
-    if node not in seen:
-        seen.add(node)
-        for i in range(len(adj[node])):
+import time
+from queue import Queue
+def create_reach(n):
+    ans=[]
+    for i in range(n+1):
+        temp_list=[]
+        for j in range(0,2048):
+            temp_list.append(False)
+        ans.append(temp_list)
             
-            if adj[node][i] not in seen:
-                
-                next_node=adj[node][i]
-                edge=(node,next_node) if (node,next_node) in weights else (next_node,node)
-
-                for j in range(len(weights[edge])):
-                    
-                    path.append(weights[edge][j])
-                    traverse_graph(next_node,start,end)
-    
-    seen.remove(node)
-    if len(path)!=0:
-        path.pop()
-    return
-
-def beautifulPath(edges,A,B):
-    global seen
-    global adj
-    global weights
-    seen=set([])
-    start=A
-    end=B
-    path=[]
-    node=A
-    for i in range(len(edges)):
-        
-        a,b,c=edges[i]
-
-        if (a,b) not in seen and (b,a) not in seen:
-            seen.add((a,b))
-            weights[(a,b)]=[]
-            if a not in adj:
-                adj[a]=[]
-
-            if b not in adj:
-                adj[b]=[]
-
-            adj[a].append(b),adj[b].append(a)
-        
-        if (a,b) in seen:
-            weights[(a,b)].append(c)
-
-        else:
-            weights[(b,a)].append(c)
-    seen=set([])
-    print(len(adj),len(weights))
-    traverse_graph(node,start,end)
-    ans=min(penalty_paths) if min(penalty_paths)!=float("inf") else -1
-    
     return ans
 
-edges=generate_random()
-A=1
-B=2
+def process_edge(weight,edge,reached):
+    v,u=edge
+    
+    for i in range(len(reached[v])):
+        if reached[v][i]:
+            
+            reached[u][i|weight]=True
+    return
+
+
+def traverse_graph(A,B,edge_weights,adj,n):
+    q=Queue(maxsize=0)
+    q.put(A)
+    processed=[False]*(n+1)
+    reached=create_reach(n)
+    reached[A][0]=True
+    discovered=[False]*(n+1)
+    discovered[A]=True
+    while q.qsize()!=0:
+        
+        v=q.get()
+        if v in adj:
+            for u in adj[v]:
                 
+                if not processed[u]:
+                    
+                    weight=None
+                    
+                    if (u,v) in edge_weights:
+                        
+                        weight=edge_weights[(u,v)][-1]
+                        edge_weights[(u,v)].pop()
+                        
+                    else:
+                        weight=edge_weights[(v,u)][-1]
+                        edge_weights[(v,u)].pop()
+                    if not discovered[u]:
+
+                        q.put(u)
+                        discovered[u]=True
+                process_edge(weight,(v,u),reached)
+                
+
+        processed[v]=True
+    
+    for i in range(len(reached[B])):
+        
+        if reached[B][i]:
+            return i
+    
+    return -1
+
+def beautifulPath(edges,A,B):
+    start=time.time()
+    edge_weights={}
+    adj={}
+    for edge in edges:
+        
+        a,b,c=edge
+
+        if a not in adj:
+            adj[a]=[]
+
+        if b not in adj:
+            adj[b]=[]
+        if a!=b:
+            adj[a].append(b),adj[b].append(a)
+        else:
+            adj[a].append(b)
+        if (a,b) not in edge_weights and (b,a) not in edge_weights:
+            edge_weights[(a,b)]=[]
+        
+        if (b,a) in edge_weights:
+            edge_weights[(b,a)].append(c)
+        
+        else:
+            edge_weights[(a,b)].append(c)
+    
+    ans=traverse_graph(A,B,edge_weights,adj,1000)
+    print(time.time()-start)
+    return ans
+
+def create_graph():
+    graph=[]
+    for i in range(10**4):
+        v1=random.randint(1,10**3)
+        v2=random.randint(1,10**3)
+        c=random.randint(1,1025)
+        graph.append([v1,v2,c])
+    A=random.randint(1,10**3-1)
+
+    return graph,A
+   
+edges,A=create_graph()
+B=2
 print(beautifulPath(edges,A,B))
+
+
