@@ -1,5 +1,5 @@
 def winningLotteryTicket(tickets):
-
+    ans=0
     cnt=[0]*(1025)
 
     for s in tickets:
@@ -13,7 +13,7 @@ def winningLotteryTicket(tickets):
 
             if i|j==1023:
                 if i==j:
-                    ans+=((cnt[i)*(cnt[i]-1))/2 
+                    ans+=((cnt[i])*(cnt[i]-1))/2 
                 else:
                     ans+=(cnt[i])*(cnt[j])
     return ans
